@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/icon" href="./assets/icons/favicon.png">
+        <title>Pokedex - Pokemon Gallery</title>
+
+        <link rel="stylesheet" href="./styles/standard.css">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="./styles/assets.css">
+
+        <script src="./scripts/db.js" defer></script>
+        <script src="./scripts/template.js" defer></script>
+        <script src="script.js" defer></script>
+    </head>
+
+    <body onload="init()">
+        <div id="loading-overlay" class="loading-overlay">
+            <div class="pokeball-spinner"></div>
+            <p>Loading Pokemon...</p>
+        </div>
+        <div class="logo-container">
+            <img class="poke-logo" src="./assets/img/poke_Logo_color_cs.png" alt="Pokemon Logo">
+        </div>
+
+        <header class="header">
+            <div class="search-container">
+                <img class="poke-ball" src="./assets/logo/pokeball.png" alt="Pokeball Icon">
+                <input type="text" id="pokemon-search" placeholder="Search (min. 3 letters)..." oninput="filterPokemon()" autocomplete="off">
+            </div>
+        </header>
+
+        <main>
+            <h1>Pokedex Gallery</h1>
+
+            <section id="content" class="content">
+                <div id="pokemon-container" class="pokedex-grid"></div>
+
+                <div class="load-more-container">
+                    <button id="load-more-btn" onclick="loadMore()">Load More</button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer_content">
+            <a href="https://developerakademie.com/" target="_blank" rel="noopener noreferrer">
+                <img class="da_logo" src="./assets/logo/da_logo.png" alt="Developer Akademie">
+            </a>
+            <p>&#169; 2026 Developer Akademie GmbH</p>
+        </footer>
+
+        <aside class="background-decorations" aria-hidden="true">
+            <img src="./assets/img/pikachu-euclidean-vector-ball.png" class="bg-shape shape-1" alt="">
+            <img src="./assets/img/pikachu.png" class="bg-shape shape-2" alt="">
+            <img src="./assets/img/pikachu_2.png" class="bg-shape shape-3" alt="">
+            <img src="./assets/img/pokedex.png" class="bg-shape shape-4" alt="">
+            <img src="./assets/img/sw_pokeball.jpg" class="bg-shape shape-5" alt="">
+            <img src="./assets/img/poke_y.png" class="bg-shape shape-6" alt="">
+            <img src="./assets/img/bulbasaur.png" class="bg-shape shape-7" alt="">
+            <img src="./assets/img/dratini.png" class="bg-shape shape-8" alt="">
+            <img src="./assets/img/charmander.png" class="bg-shape shape-9" alt="">
+            <img src="./assets/img/butterfree.png" class="bg-shape shape-10" alt="">
+            <img src="./assets/img/squirtle.png" class="bg-shape shape-11" alt="">
+        </aside>
+
+        <div id="dialog-overlay" onclick="closePokemonDialog()"></div>
+
+        <dialog id="pokemon-details-dialog">
+            <div id="dialog-content"></div>
+        </dialog>
+    </body>
+</html>
