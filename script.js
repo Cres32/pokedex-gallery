@@ -14,12 +14,46 @@ async function init() {
   toggleLoading(false);
 }
 
+
 function resetUI() {
   const searchInput = document.getElementById("pokemon-search");
   if (searchInput) searchInput.value = "";
   const loadMoreBtn = document.getElementById("load-more-btn");
   if (loadMoreBtn) loadMoreBtn.style.display = "block";
   document.getElementById("pokemon-container").innerHTML = "";
+}
+
+
+function getPokemonViewData(pokemon, index, color) {
+  return {
+    id: pokemon.id,
+    displayId: String(pokemon.id).padStart(3, "0"),
+    name: pokemon.name.toUpperCase(),
+    image: pokemon.sprites.other["official-artwork"].front_default,
+    color: color,
+    index: index,
+    weight: pokemon.weight / 10,
+    height: pokemon.height / 10,
+    types: mapTypes(pokemon.types),
+    stats: mapStats(pokemon.stats),
+  };
+}
+
+
+function mapTypes(types) {
+  return types.map((t) => ({
+    name: t.type.name,
+    icon: `https://raw.githubusercontent.com/duiker101/pokemon-type-svg-icons/master/icons/${t.type.name}.svg`,
+  }));
+}
+
+
+function mapStats(stats) {
+  return stats.map((s) => ({
+    name: s.stat.name.toUpperCase(),
+    value: s.base_stat,
+    percent: Math.min((s.base_stat / 150) * 100, 100),
+  }));
 }
 
 
@@ -38,7 +72,6 @@ async function loadMore() {
 
   toggleLoading(false);
 }
-
 
 async function fetchTotalCount() {
   const response = await fetch(
@@ -83,13 +116,24 @@ async function fetchAndPreparePokemon(id) {
 }
 
 
+// function renderAllPokemon() {
+//   const container = document.getElementById("pokemon-container");
+//   if (!container) return;
+//   container.innerHTML = allPokemonDetails
+//     .map((pokemon) => {
+//       const color = TYPE_COLORS[pokemon.types[0].type.name] || "#AAA";
+//       return generatePokemonCardHTML(pokemon, color);
+//     })
+//     .join("");
+// }
 function renderAllPokemon() {
   const container = document.getElementById("pokemon-container");
   if (!container) return;
   container.innerHTML = allPokemonDetails
     .map((pokemon) => {
       const color = TYPE_COLORS[pokemon.types[0].type.name] || "#AAA";
-      return generatePokemonCardHTML(pokemon, color);
+      const data = getPokemonViewData(pokemon, null, color); // Preparamos datos
+      return generatePokemonCardHTML(data); // Solo pasamos datos limpios
     })
     .join("");
 }
@@ -148,22 +192,42 @@ function getFilteredList() {
 }
 
 
+// function openPokemonDialog(pokemonId) {
+//   const currentList = getFilteredList();
+//   const pokemon = allPokemonDetails.find(p => p.id === pokemonId);
+//   const index = currentList.indexOf(pokemon);
+//   const color = TYPE_COLORS[pokemon.types[0].type.name] || "#AAA";
+  
+//   setupDialogUI(pokemon, index, color, currentList.length);
+// }
 function openPokemonDialog(pokemonId) {
   const currentList = getFilteredList();
-  const pokemon = allPokemonDetails.find(p => p.id === pokemonId);
+  const pokemon = allPokemonDetails.find((p) => p.id === pokemonId);
   const index = currentList.indexOf(pokemon);
   const color = TYPE_COLORS[pokemon.types[0].type.name] || "#AAA";
-  
-  setupDialogUI(pokemon, index, color, currentList.length);
+  const data = getPokemonViewData(pokemon, index, color); // Lógica aquí
+
+  setupDialogUI(data, currentList.length); // Renderizado allá
 }
 
 
-function setupDialogUI(pokemon, index, color, listLength) {
-  const dialog = document.getElementById("pokemon-details-dialog");
-  applyDynamicColors(dialog, color);
-  document.getElementById("dialog-content").innerHTML = generatePokemonDialogHTML(pokemon, index, color);
-  updateNavArrows(index, listLength);
+// function setupDialogUI(pokemon, index, color, listLength) {
+//   const dialog = document.getElementById("pokemon-details-dialog");
+//   applyDynamicColors(dialog, color);
+//   document.getElementById("dialog-content").innerHTML = generatePokemonDialogHTML(pokemon, index, color);
+//   updateNavArrows(index, listLength);
   
+//   dialog.classList.add("is-visible");
+//   document.getElementById("dialog-overlay").classList.add("is-visible");
+//   document.body.style.overflow = "hidden";
+// }
+function setupDialogUI(data, listLength) {
+  const dialog = document.getElementById("pokemon-details-dialog");
+  applyDynamicColors(dialog, data.color);
+  document.getElementById("dialog-content").innerHTML =
+    generatePokemonDialogHTML(data);
+  updateNavArrows(data.index, listLength);
+
   dialog.classList.add("is-visible");
   document.getElementById("dialog-overlay").classList.add("is-visible");
   document.body.style.overflow = "hidden";
