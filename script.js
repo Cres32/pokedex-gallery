@@ -56,6 +56,7 @@ function updateLoadMoreVisibility() {
   }
 }
 
+
 async function renderPokemonRange(start, end) {
   const promises = [];
   for (let i = start; i <= end; i++) {
@@ -81,6 +82,7 @@ async function fetchAndPreparePokemon(id) {
   }
 }
 
+
 function renderAllPokemon() {
   const container = document.getElementById("pokemon-container");
   if (!container) return;
@@ -92,12 +94,14 @@ function renderAllPokemon() {
     .join("");
 }
 
+
 function renderSinglePokemon(pokemonData) {
   let container = document.getElementById("pokemon-container");
   let type = pokemonData.types[0].type.name;
   let color = TYPE_COLORS[type] || "#AAA";
   container.innerHTML += generatePokemonCardHTML(pokemonData, color);
 }
+
 
 function filterPokemon() {
   const term = document.getElementById("pokemon-search").value.toLowerCase().trim();
@@ -111,11 +115,13 @@ function filterPokemon() {
   applySearchFilter(cards, term);
 }
 
+
 function showAllCards(cards) {
   cards.forEach((c) => (c.style.display = "flex"));
   document.getElementById("load-more-btn").style.display = "block";
   renderNotFoundMessage(true);
 }
+
 
 function applySearchFilter(cards, term) {
   cards.forEach((card) => {
@@ -141,6 +147,7 @@ function getFilteredList() {
     : allPokemonDetails;
 }
 
+
 function openPokemonDialog(pokemonId) {
   const currentList = getFilteredList();
   const pokemon = allPokemonDetails.find(p => p.id === pokemonId);
@@ -149,6 +156,7 @@ function openPokemonDialog(pokemonId) {
   
   setupDialogUI(pokemon, index, color, currentList.length);
 }
+
 
 function setupDialogUI(pokemon, index, color, listLength) {
   const dialog = document.getElementById("pokemon-details-dialog");
@@ -161,6 +169,7 @@ function setupDialogUI(pokemon, index, color, listLength) {
   document.body.style.overflow = "hidden";
 }
 
+
 function updateNavArrows(index, listLength) {
   setTimeout(() => {
     const prev = document.querySelector(".prev-arrow");
@@ -170,6 +179,7 @@ function updateNavArrows(index, listLength) {
   }, 50);
 }
 
+
 function navigatePokemon(newIndex) {
   const currentList = getFilteredList();
   if (newIndex >= 0 && newIndex < currentList.length) {
@@ -177,16 +187,19 @@ function navigatePokemon(newIndex) {
   }
 }
 
+
 function applyDynamicColors(dialog, color) {
   dialog.style.setProperty("--dynamic-type-color", color);
   dialog.style.setProperty("--dynamic-soft-color", color + "26");
 }
+
 
 function closePokemonDialog() {
   document.getElementById("pokemon-details-dialog").classList.remove("is-visible");
   document.getElementById("dialog-overlay").classList.remove("is-visible");
   document.body.style.overflow = "auto";
 }
+
 
 function toggleLoading(show) {
   const loader = document.getElementById("loading-overlay");
