@@ -4,7 +4,6 @@ let currentCount = 0;
 const BATCH_SIZE = 24;
 let totalPokemonInApi = null;
 
-
 async function init() {
   resetUI();
   toggleLoading(true);
@@ -14,7 +13,6 @@ async function init() {
   toggleLoading(false);
 }
 
-
 function resetUI() {
   const searchInput = document.getElementById("pokemon-search");
   if (searchInput) searchInput.value = "";
@@ -22,7 +20,6 @@ function resetUI() {
   if (loadMoreBtn) loadMoreBtn.style.display = "block";
   document.getElementById("pokemon-container").innerHTML = "";
 }
-
 
 function getPokemonViewData(pokemon, index, color) {
   return {
@@ -39,14 +36,12 @@ function getPokemonViewData(pokemon, index, color) {
   };
 }
 
-
 function mapTypes(types) {
   return types.map((t) => ({
     name: t.type.name,
     icon: `https://raw.githubusercontent.com/duiker101/pokemon-type-svg-icons/master/icons/${t.type.name}.svg`,
   }));
 }
-
 
 function mapStats(stats) {
   return stats.map((s) => ({
@@ -55,7 +50,6 @@ function mapStats(stats) {
     percent: Math.min((s.base_stat / 150) * 100, 100),
   }));
 }
-
 
 async function loadMore() {
   if (totalPokemonInApi && currentCount >= totalPokemonInApi) return;
@@ -69,7 +63,6 @@ async function loadMore() {
   currentCount = end;
 
   updateLoadMoreVisibility();
-
   toggleLoading(false);
 }
 
@@ -81,14 +74,12 @@ async function fetchTotalCount() {
   totalPokemonInApi = data.count;
 }
 
-
 function updateLoadMoreVisibility() {
   const btn = document.getElementById("load-more-btn");
   if (btn && totalPokemonInApi !== null) {
     btn.style.display = currentCount >= totalPokemonInApi ? "none" : "block";
   }
 }
-
 
 async function renderPokemonRange(start, end) {
   const promises = [];
@@ -104,7 +95,6 @@ async function renderPokemonRange(start, end) {
   renderAllPokemon();
 }
 
-
 async function fetchAndPreparePokemon(id) {
   try {
     const response = await fetch(POKE_API_URL + id);
@@ -115,29 +105,17 @@ async function fetchAndPreparePokemon(id) {
   }
 }
 
-
-// function renderAllPokemon() {
-//   const container = document.getElementById("pokemon-container");
-//   if (!container) return;
-//   container.innerHTML = allPokemonDetails
-//     .map((pokemon) => {
-//       const color = TYPE_COLORS[pokemon.types[0].type.name] || "#AAA";
-//       return generatePokemonCardHTML(pokemon, color);
-//     })
-//     .join("");
-// }
 function renderAllPokemon() {
   const container = document.getElementById("pokemon-container");
   if (!container) return;
   container.innerHTML = allPokemonDetails
     .map((pokemon) => {
       const color = TYPE_COLORS[pokemon.types[0].type.name] || "#AAA";
-      const data = getPokemonViewData(pokemon, null, color); // Preparamos datos
-      return generatePokemonCardHTML(data); // Solo pasamos datos limpios
+      const data = getPokemonViewData(pokemon, null, color);
+      return generatePokemonCardHTML(data);
     })
     .join("");
 }
-
 
 function renderSinglePokemon(pokemonData) {
   let container = document.getElementById("pokemon-container");
@@ -145,7 +123,6 @@ function renderSinglePokemon(pokemonData) {
   let color = TYPE_COLORS[type] || "#AAA";
   container.innerHTML += generatePokemonCardHTML(pokemonData, color);
 }
-
 
 function filterPokemon() {
   const term = document.getElementById("pokemon-search").value.toLowerCase().trim();
@@ -155,10 +132,8 @@ function filterPokemon() {
     showAllCards(cards);
     return;
   }
-
   applySearchFilter(cards, term);
 }
-
 
 function showAllCards(cards) {
   cards.forEach((c) => (c.style.display = "flex"));
@@ -183,7 +158,6 @@ function applySearchFilter(cards, term) {
   renderNotFoundMessage(hasResults);
 }
 
-
 function getFilteredList() {
   const term = document.getElementById("pokemon-search").value.toLowerCase().trim();
   return term.length >= 3 
@@ -191,36 +165,16 @@ function getFilteredList() {
     : allPokemonDetails;
 }
 
-
-// function openPokemonDialog(pokemonId) {
-//   const currentList = getFilteredList();
-//   const pokemon = allPokemonDetails.find(p => p.id === pokemonId);
-//   const index = currentList.indexOf(pokemon);
-//   const color = TYPE_COLORS[pokemon.types[0].type.name] || "#AAA";
-  
-//   setupDialogUI(pokemon, index, color, currentList.length);
-// }
 function openPokemonDialog(pokemonId) {
   const currentList = getFilteredList();
   const pokemon = allPokemonDetails.find((p) => p.id === pokemonId);
   const index = currentList.indexOf(pokemon);
   const color = TYPE_COLORS[pokemon.types[0].type.name] || "#AAA";
-  const data = getPokemonViewData(pokemon, index, color); // Lógica aquí
+  const data = getPokemonViewData(pokemon, index, color);
 
-  setupDialogUI(data, currentList.length); // Renderizado allá
+  setupDialogUI(data, currentList.length);
 }
 
-
-// function setupDialogUI(pokemon, index, color, listLength) {
-//   const dialog = document.getElementById("pokemon-details-dialog");
-//   applyDynamicColors(dialog, color);
-//   document.getElementById("dialog-content").innerHTML = generatePokemonDialogHTML(pokemon, index, color);
-//   updateNavArrows(index, listLength);
-  
-//   dialog.classList.add("is-visible");
-//   document.getElementById("dialog-overlay").classList.add("is-visible");
-//   document.body.style.overflow = "hidden";
-// }
 function setupDialogUI(data, listLength) {
   const dialog = document.getElementById("pokemon-details-dialog");
   applyDynamicColors(dialog, data.color);
@@ -233,7 +187,6 @@ function setupDialogUI(data, listLength) {
   document.body.style.overflow = "hidden";
 }
 
-
 function updateNavArrows(index, listLength) {
   setTimeout(() => {
     const prev = document.querySelector(".prev-arrow");
@@ -243,7 +196,6 @@ function updateNavArrows(index, listLength) {
   }, 50);
 }
 
-
 function navigatePokemon(newIndex) {
   const currentList = getFilteredList();
   if (newIndex >= 0 && newIndex < currentList.length) {
@@ -251,19 +203,16 @@ function navigatePokemon(newIndex) {
   }
 }
 
-
 function applyDynamicColors(dialog, color) {
   dialog.style.setProperty("--dynamic-type-color", color);
   dialog.style.setProperty("--dynamic-soft-color", color + "26");
 }
-
 
 function closePokemonDialog() {
   document.getElementById("pokemon-details-dialog").classList.remove("is-visible");
   document.getElementById("dialog-overlay").classList.remove("is-visible");
   document.body.style.overflow = "auto";
 }
-
 
 function toggleLoading(show) {
   const loader = document.getElementById("loading-overlay");
